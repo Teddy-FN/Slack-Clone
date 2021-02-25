@@ -1,17 +1,37 @@
 import React from 'react'
 import styled from 'styled-components'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import ToogleSwitch from './ButtonDarkMode/ToogleSwitch'
+// import ToogleSwitch from './ButtonDarkMode/ToogleSwitch'
 import AddIcon from '@material-ui/icons/Add';
 // Import yang sudah kita buat tadi 
 import {
     SideBarItems
 } from '../data/SideBarItems'
-import {
-    ChannelsSideList
-} from '../data/ChannelsSideList'
 
-function Sidebar() {
+// import {
+//     ChannelsSideList
+// } from '../data/ChannelsSideList'
+
+// Import Database
+import db from '../firebase'
+
+function Sidebar(props) {
+    console.log('PROPS SIDEBAR', props)
+
+
+    // Mari bikin penambah channel
+    const addChannels = () => {
+        // kita bikin prompt untuk menginput Character
+        const promptName = prompt('Enter Channel Name!')
+        console.log('promptName', promptName)
+        // Setelah itu kita taruh ke database   
+        if (promptName) {
+            db.collection('rooms').add({
+                name: promptName
+            })
+        }
+    }
+
     return (
         <Container>
             {/* DI dalam sidebar ini terdapat 3 component */}
@@ -39,13 +59,13 @@ function Sidebar() {
                     <div>
                         Channels
                     </div>
-                    <AddIcon />
+                    <AddIcon onClick={addChannels} />
                 </NewChannelContainer>
                 <ChannelsList>
                     {
-                        ChannelsSideList.map((item) => (
-                            <Channel>
-                                {item.name}
+                        props.rooms.map(item => (
+                            <Channel >
+                                # {item.name}
                             </Channel>
                         ))
                     }
@@ -54,14 +74,14 @@ function Sidebar() {
 
 
             {/* Dark Mode */}
-            <ChangeColorMode>
+            {/* <ChangeColorMode>
                 <ButtonColor>
                     <TexChangeColor>
                         Change Color
                     </TexChangeColor>
                     <ToogleSwitch />
                 </ButtonColor>
-            </ChangeColorMode>
+            </ChangeColorMode> */}
         </Container>
     )
 }
@@ -136,6 +156,7 @@ const NewChannelContainer = styled.div`
     height: 28px;
     padding-left: 19px;
     padding-right: 12px;
+    cursor: pointer;
 `
 
 const ChannelsList = styled.div`
@@ -154,19 +175,19 @@ const Channel = styled.div`
     }
 `
 
-const ChangeColorMode = styled.div`
-    display:flex;    
-    align-items:flex-end;
-    height: 30%;
-`
+// const ChangeColorMode = styled.div`
+//     display:flex;    
+//     align-items:flex-end;
+//     height: 30%;
+// `
 
-const ButtonColor = styled.div`
+// const ButtonColor = styled.div`
 
-`
-const TexChangeColor = styled.div`
-    display: flex;
-    margin-left: 60px;
-    font-size: 20px;
-    color: #fff;
-    
-`
+// `
+// const TexChangeColor = styled.div`
+//     display: flex;
+//     margin-left: 60px;
+//     font-size: 20px;
+//     color: #fff;
+
+// `

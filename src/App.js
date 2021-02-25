@@ -1,5 +1,5 @@
-/* eslint-disable no-undef */
-import React, { Component } from 'react'
+/* eslint-disable array-callback-return */
+import React, { useEffect, useState } from 'react'
 import './App.css';
 // Router
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
@@ -11,58 +11,54 @@ import Login from './component/Login'
 import Header from './component/Header'
 import Sidebar from './component/Sidebar'
 
-import { StyleProvider } from './contexs/StyleContext'
+// FIrebase
+import db from './firebase'
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isDark: false
-    };
+function App() {
+
+  // Bikin tempat penyimpanan 
+  const [rooms, setRooms] = useState([])
+  // database from Firebase
+  const getChannels = () => {
+    db.collection('rooms').onSnapshot((snapshot) => {
+      setRooms(snapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          name: doc.data().name
+        }
+      }))
+    })
   }
 
-  componentDidMount() {
-    if (localStorage.getItem("isDark") === null) {
-      const darkPref = window.matchMedia("(prefers-color-scheme: dark)");
-      localStorage.setItem("isDark", darkPref.matches);
-    }
-    this.setState({ isDark: JSON.parse(localStorage.getItem("isDark")) });
-  }
-  changeTheme = () => {
-    this.setState({ isDark: !this.state.isDark }, () => {
-      localStorage.setItem("isDark", this.state.isDark);
-    });
-  };
+  useEffect(() => {
+    getChannels()
+  }, [])
 
-  render() {
-    return (
-      <div className={this.state.isDark ? "dark-mode" : null}>
-        <StyleProvider
-          value={{ isDark: this.state.isDark, changeTheme: this.changeTheme }}
-        >
-          <Router>
-            <Container>
-              <Header />
-              <Main>
-                <Sidebar />
-                <Switch>
-                  <Route path="/room">
-                    <Chat />
-                  </Route>
-                  <Route path="/">
-                    <Login />
-                  </Route>
-                </Switch>
-              </Main>
-            </Container>
-          </Router>
-        </StyleProvider>
-      </div>
-    );
-  }
+
+  console.log(rooms)
+  return (
+    <div>
+      <Router>
+        <Container>
+          <Header />
+          <Main>
+            <Sidebar rooms={rooms} />
+            <Switch>
+              <Route path="/room">
+                <Chat />
+              </Route>
+              <Route path="/">
+                <Login />
+              </Route>
+            </Switch>
+          </Main>
+        </Container>
+      </Router>
+    </div>
+  );
 }
 
-
+export default App;
 
 // Setelah kita import styled component maka kita panggil dengan variabel dan di belakang harus di kasih backtick
 const Container = styled.div`
