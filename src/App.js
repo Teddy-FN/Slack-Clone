@@ -13,11 +13,15 @@ import Sidebar from './component/Sidebar'
 
 // FIrebase
 import db from './firebase'
+import { auth } from './firebase'
 
 function App() {
 
   // Bikin tempat penyimpanan 
   const [rooms, setRooms] = useState([])
+  // Login 
+  // karena dari localStorage berbentuk JSON maka kita perlu parse ke dalam string (di user ini adalah nilai secara default)
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
   // database from Firebase
   const getChannels = () => {
     db.collection('rooms').onSnapshot((snapshot) => {
@@ -34,25 +38,41 @@ function App() {
     getChannels()
   }, [])
 
+  // Functio SignOut
+  const signOut = () => {
+    // karena kita si sign out akan meremove local Storage
+    auth.signOut().then(() => {
+      localStorage.removeItem('user')
+      setUser(null)
+    })
+  }
 
-  console.log(rooms)
+  console.log('User in APP', user)
+  // console.log(rooms)
   return (
     <div>
       <Router>
-        <Container>
-          <Header />
-          <Main>
-            <Sidebar rooms={rooms} />
-            <Switch>
-              <Route path="/room">
-                <Chat />
-              </Route>
-              <Route path="/">
-                <Login />
-              </Route>
-            </Switch>
-          </Main>
-        </Container>
+        {
+          // If not user
+          !user ?
+            // parsing 
+            <Login setUser={setUser} />
+            :
+            <Container>
+              <Header user={user} signOut={signOut} />
+              <Main>
+                <Sidebar rooms={rooms} />
+                <Switch>
+                  <Route path="/room/:channelId">
+                    <Chat user={user} />
+                  </Route>
+                  <Route path="/">
+                    Select or Create Channel
+                  </Route>
+                </Switch>
+              </Main>
+            </Container>
+        }
       </Router>
     </div>
   );
@@ -67,7 +87,7 @@ const Container = styled.div`
   height: 100vh;
   // background: orange;
   display: grid;
-  grid-template-rows: 30px auto; 
+  grid-template-rows: 30px minmax(0, 1fr); 
 
 `
 const Main = styled.div`

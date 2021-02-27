@@ -3,7 +3,10 @@ import React from 'react'
 import styled from 'styled-components'
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-function Header() {
+
+
+function Header({ user, signOut }) {
+    // Kita perlu set signOut dari function yang sudah kita buat tadi di APP JS
     return (
         <Container>
             {/* Di header ini ada Container pembungkus lagi Main dan di dalamnya Main ada 2 component yaitu search bar dan profile bar */}
@@ -20,10 +23,10 @@ function Header() {
 
             <UserContainer>
                 <Name>
-                    Teddy Ferdian
+                    {user.name}
                 </Name>
-                <UserImage>
-                    <img src="https://bowerbird-app.s3.amazonaws.com/production/uploads/publication/image/1330/small_default_profile.png" />
+                <UserImage onClick={signOut}>
+                    <img src={user.photo ? user.photo : "https://i.imgur.com/6VBx3io.png"} />
                 </UserImage>
             </UserContainer>
         </Container>
@@ -96,6 +99,7 @@ const UserImage = styled.div`
     height: 25px;
     border : 2px solid #fff;
     border-radius : 3px;
+    cursor: pointer;
     img {
         width: 100%;
     }

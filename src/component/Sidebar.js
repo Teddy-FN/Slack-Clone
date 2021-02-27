@@ -8,6 +8,9 @@ import {
     SideBarItems
 } from '../data/SideBarItems'
 
+// Import react router dom buat ganti channel
+import { useHistory } from 'react-router-dom'
+
 // import {
 //     ChannelsSideList
 // } from '../data/ChannelsSideList'
@@ -29,6 +32,16 @@ function Sidebar(props) {
             db.collection('rooms').add({
                 name: promptName
             })
+        }
+    }
+
+
+    // Ganti Channel 
+    const history = useHistory();
+    const goToChannel = id => {
+        if (id) {
+            console.log('INI ID PAK', id)
+            history.push(`/room/${id}`)
         }
     }
 
@@ -64,7 +77,7 @@ function Sidebar(props) {
                 <ChannelsList>
                     {
                         props.rooms.map(item => (
-                            <Channel >
+                            <Channel onClick={() => goToChannel(item.id)}>
                                 # {item.name}
                             </Channel>
                         ))
