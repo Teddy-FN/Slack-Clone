@@ -73,7 +73,7 @@ function Chat({ user }) {
                         # {channel && channel.name}
                     </ChannelName>
                     <ChannelInfo>
-                        TEMPAT NONGKRONYA ANAK MUDA CUYY!!!!!!!!!!!!!!!
+                        Let's chat and have fun 😁
                     </ChannelInfo>
                 </Channel>
                 <ChannelDetails>
