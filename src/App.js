@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable array-callback-return */
 import React, { useEffect, useState } from 'react'
 import './App.css';
@@ -10,6 +11,8 @@ import Chat from './component/Chat'
 import Login from './component/Login'
 import Header from './component/Header'
 import Sidebar from './component/Sidebar'
+
+import Img from '../src/assets/img/conversation.png'
 
 // FIrebase
 import db from './firebase'
@@ -67,7 +70,12 @@ function App() {
                     <Chat user={user} />
                   </Route>
                   <Route path="/">
-                    Select or Create Channel
+                    <ImageMain>
+                      <img src={Img} className="landing-image" />
+                      <LandingHome>
+                        <h1>Lets make channel and meet some new friends</h1>
+                      </LandingHome>
+                    </ImageMain>
                   </Route>
                 </Switch>
               </Main>
@@ -95,4 +103,16 @@ const Main = styled.div`
   display:grid;
   // grid-template-columns: width width
   grid-template-columns: 260px auto;
+`
+
+const ImageMain = styled.div`
+  margin: auto;
+`
+
+const LandingHome = styled.h1`
+  text-align:center;
+  font-size: 20px;
+  margin: auto;
+  top: 20px;
+  color: #350d36;
 `
